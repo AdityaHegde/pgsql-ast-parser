@@ -23,6 +23,7 @@ import {lexerAny} from '../lexer';
 @include "prepare.ne"
 @include "create-view.ne"
 @include "functions.ne"
+@include "table-sample.ne"
 
 # list of statements, separated by ";"
 main -> statement_separator:* statement (statement_separator:+ statement):* statement_separator:*  {% ([_, head, _tail]) => {

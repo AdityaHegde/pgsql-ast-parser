@@ -577,6 +577,7 @@ export interface SelectFromStatement extends PGNode {
     from?: From[] | nil;
     where?: Expr | nil;
     groupBy?: Expr[] | nil;
+    sample?: Sample | nil;
     limit?: LimitStatement | nil;
     orderBy?: OrderByStatement[] | nil;
     distinct?: 'all' | 'distinct' | Expr[] | nil;
@@ -653,6 +654,7 @@ export interface QNameMapped extends QNameAliased {
 export interface FromTable extends PGNode {
     type: 'table',
     name: QNameMapped;
+    sample?: Sample;
     join?: JoinClause | nil;
 }
 
@@ -1042,4 +1044,19 @@ export interface Interval {
     minutes?: number;
     seconds?: number;
     milliseconds?: number;
+}
+
+export interface Sample {
+    type: ('sample' | 'tablesample');
+    details: SampleDetails;
+}
+export interface SampleDetails {
+    type: ('size-first' | 'method-first'),
+    size: SampleSize;
+    method?: string;
+    seed?: number;
+}
+export interface SampleSize {
+    size: number;
+    postfix?: string;
 }

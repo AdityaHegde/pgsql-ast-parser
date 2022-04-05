@@ -1075,6 +1075,9 @@ const visitor = astVisitor<IAstFullVisitor>(m => ({
                 }
                 list(s.name.columnNames, c => ret.push(name(c)), true);
             }
+            if (s.sample) {
+                m.sample(s.sample);
+            }
         });
     },
 
@@ -1286,6 +1289,11 @@ const visitor = astVisitor<IAstFullVisitor>(m => ({
             ret.push(' ');
         }
 
+        if (s.sample) {
+            m.sample(s.sample);
+            ret.push(' ');
+        }
+
         if (s.orderBy) {
             visitOrderBy(m, s.orderBy);
             ret.push(' ');
@@ -1419,6 +1427,43 @@ const visitor = astVisitor<IAstFullVisitor>(m => ({
         }
     },
 
+    sample: s => {
+        if (s.type === "sample") {
+            ret.push("USING SAMPLE ");
+        } else {
+            ret.push("TABLESAMPLE ");
+        }
+        if (s.details.type === "size-first") {
+            ret.push(`${s.details.size.size}`);
+            if (s.details.size.postfix) {
+                ret.push(` ${s.details.size.postfix}`);
+            }
+            ret.push(" ");
+            if (s.details.method || s.details.seed) {
+                ret.push("(");
+                if (s.details.method) {
+                    ret.push(s.details.method);
+                }
+                if (s.details.seed) {
+                    ret.push(`${s.details.method ? ", " : ""}${s.details.seed}`);
+                }
+                ret.push(") ");
+            }
+        } else {
+            if (s.details.method) {
+                ret.push(s.details.method);
+            }
+            ret.push("(");
+            ret.push(`${s.details.size.size}`);
+            if (s.details.size.postfix) {
+                ret.push(` ${s.details.size.postfix}`);
+            }
+            ret.push(") ");
+            if (s.details.seed) {
+                ret.push(`REPEATABLE (${s.details.seed})`);
+            }
+        }
+    }
 }))
 
 export const toSql = {} as IAstToSql;

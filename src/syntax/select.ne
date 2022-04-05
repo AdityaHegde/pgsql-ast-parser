@@ -10,9 +10,9 @@ array_of[EXP] -> $EXP (%comma $EXP {% last %}):* {% ([head, tail]) => {
 # https://www.postgresql.org/docs/12/sql-select.html
 
 select_statement
-    -> select_what select_from:? select_where:? select_groupby:? select_order_by:? select_limit_offset:? select_for:?
+    -> select_what select_from:? select_where:? select_groupby:? select_using_sample:? select_order_by:? select_limit_offset:? select_for:?
     {% x => {
-        let [what, from, where, groupBy, orderBy, limit, selectFor] = x;
+        let [what, from, where, groupBy, usingSample, orderBy, limit, selectFor] = x;
         from = unwrap(from);
         groupBy = groupBy && (groupBy.length === 1 && groupBy[0].type === 'list' ? groupBy[0].expressions : groupBy);
         return track(x, {
@@ -23,6 +23,7 @@ select_statement
             ...orderBy ? { orderBy } : {},
             ...where ? { where } : {},
             ...selectFor ? { for: selectFor[1] } : {},
+            ...usingSample ? { sample: usingSample } : {},
             type: 'select',
         });
     } %}
@@ -61,13 +62,14 @@ stb_opts
 
 
 # Selects on tables CAN have an alias
-stb_table ->  table_ref stb_opts:? {% x => {
+stb_table ->  table_ref stb_opts:? select_table_sample:? {% x => {
         return track(x, {
             type: 'table',
             name: track(x, {
                 ...x[0],
                 ...x[1],
             }),
+            ...x[2] ? { sample: x[2] } : {},
         });
     } %}
 

@@ -86,6 +86,7 @@ export interface IAstPartialMapper {
     createSequence?(seq: a.CreateSequenceStatement): a.Statement | nil
     alterSequence?(seq: a.AlterSequenceStatement): a.Statement | nil
     begin?(begin: a.BeginStatement): a.Statement | nil
+    sample?(sample: a.Sample): a.Sample | nil
 }
 
 export type IAstFullMapper = {
@@ -1251,6 +1252,10 @@ export class AstDefaultMapper implements IAstMapper {
             left,
             right,
         });
+    }
+
+    sample(s: a.Sample): a.Sample | nil {
+        return s;
     }
 }
 

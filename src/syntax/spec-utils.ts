@@ -2,7 +2,29 @@ import { Parser, Grammar } from 'nearley';
 import { expect, assert } from 'chai';
 import grammar from '../syntax/main.ne';
 import { trimNullish } from '../utils';
-import { Expr, SelectStatement, CreateTableStatement, CreateIndexStatement, Statement, InsertStatement, UpdateStatement, AlterTableStatement, DeleteStatement, CreateExtensionStatement, CreateSequenceStatement, AlterSequenceStatement, SelectedColumn, Interval, BinaryOperator, ExprBinary, Name, ExprInteger, FromTable, QName } from './ast';
+import {
+    Expr,
+    SelectStatement,
+    CreateTableStatement,
+    CreateIndexStatement,
+    Statement,
+    InsertStatement,
+    UpdateStatement,
+    AlterTableStatement,
+    DeleteStatement,
+    CreateExtensionStatement,
+    CreateSequenceStatement,
+    AlterSequenceStatement,
+    SelectedColumn,
+    Interval,
+    BinaryOperator,
+    ExprBinary,
+    Name,
+    ExprInteger,
+    FromTable,
+    QName,
+    SampleSize, SampleDetails, Sample
+} from './ast';
 import { astMapper, IAstMapper } from '../ast-mapper';
 import { toSql, IAstToSql } from '../to-sql';
 import { parseIntervalLiteral } from '../parser';
@@ -323,5 +345,46 @@ export function tbl(nm: string): FromTable {
     return {
         type: 'table',
         name: name(nm),
+    };
+}
+
+export function sampleSizeNum(size: number, postfix?: string): SampleSize {
+    return {
+        size,
+        ...postfix ? { postfix } : {},
+    };
+}
+export function sampleSizeFirst(size: SampleSize, method?: string, seed?: number): SampleDetails {
+    return {
+        type: "size-first",
+        size,
+        ...method ? { method } : {},
+        ...seed ? { seed } : {},
+    };
+}
+export function sampleMethodFirst(size: SampleSize, method?: string, seed?: number): SampleDetails {
+    return {
+        type: "method-first",
+        size,
+        ...method ? { method } : {},
+        ...seed ? { seed } : {},
+    };
+}
+
+export function usingSample(details: SampleDetails): Sample {
+    return {
+        type: "sample",
+        details,
+    };
+}
+export function tableSample(nm: string, details: SampleDetails, join?: any): FromTable {
+    return {
+        type: "table",
+        name: name(nm),
+        sample: {
+            type: "tablesample",
+            details,
+        },
+        ...join ? { join } : {},
     };
 }

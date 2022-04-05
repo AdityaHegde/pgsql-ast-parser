@@ -228,6 +228,11 @@ kw_prepare -> %word {% notReservedKw('prepare')  %}
 kw_raise -> %word {% notReservedKw('raise')  %}
 kw_continue -> %word {% notReservedKw('continue')  %}
 kw_share -> %word {% notReservedKw('share')  %}
+# table sample
+kw_reservoir -> %word {% notReservedKw('reservoir')  %}
+kw_bernoulli -> %word {% notReservedKw('bernoulli')  %}
+kw_repeatable -> %word {% notReservedKw('repeatable')  %}
+kw_percent -> %word {% notReservedKw('percent')  %}
 
 
 # === Composite keywords
