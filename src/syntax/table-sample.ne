@@ -8,6 +8,12 @@
             details: x[index],
         });
     }
+    function sampleSizeWithPostfix(x: any, postfix: string) {
+        return track(x, {
+            size: unbox(x[0]),
+            postfix,
+        });
+    }
 %}
 
 # https://duckdb.org/docs/sql/samples
@@ -48,11 +54,11 @@ sample_method_seed -> kw_repeatable lparen int rparen {% x => x[2] %}
 
 sample_size
     -> int              {% x => track(x, { size: unbox(x[0]) }) %}
-     | int kw_rows      {% x => track(x, { size: unbox(x[0]), postfix: "ROWS" }) %}
-     | int %op_mod      {% x => track(x, { size: unbox(x[0]), postfix: "%" }) %}
-     | float %op_mod    {% x => track(x, { size: unbox(x[0]), postfix: "%" }) %}
-     | int kw_percent   {% x => track(x, { size: unbox(x[0]), postfix: "PERCENT" }) %}
-     | float kw_percent {% x => track(x, { size: unbox(x[0]), postfix: "PERCENT" }) %}
+     | int kw_rows      {% x => sampleSizeWithPostfix(x, "ROWS") %}
+     | int %op_mod      {% x => sampleSizeWithPostfix(x, "%") %}
+     | float %op_mod    {% x => sampleSizeWithPostfix(x, "%") %}
+     | int kw_percent   {% x => sampleSizeWithPostfix(x, "PERCENT") %}
+     | float kw_percent {% x => sampleSizeWithPostfix(x, "PERCENT") %}
 
 sampling_methods
     -> kw_reservoir {% unwrap %}

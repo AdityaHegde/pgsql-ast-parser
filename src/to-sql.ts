@@ -1463,6 +1463,10 @@ const visitor = astVisitor<IAstFullVisitor>(m => ({
                 ret.push(`REPEATABLE (${s.details.seed})`);
             }
         }
+    },
+
+    timeInterval: t => {
+        ret.push(`INTERVAL ${t.period} ${t.unit}`);
     }
 }))
 

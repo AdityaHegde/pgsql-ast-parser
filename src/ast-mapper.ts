@@ -77,6 +77,7 @@ export interface IAstPartialMapper {
     ref?: (val: a.ExprRef) => a.Expr | nil
     unary?: (val: a.ExprUnary) => a.Expr | nil
     binary?: (val: a.ExprBinary) => a.Expr | nil
+    timeInterval?: (val: a.ExprInterval) => a.Expr | nil
     join?(join: a.JoinClause): a.JoinClause | nil
     constraint?: (constraint: a.ColumnConstraint) => a.ColumnConstraint | nil
     valueKeyword?(val: a.ExprValueKeyword): a.Expr | nil
@@ -1076,6 +1077,8 @@ export class AstDefaultMapper implements IAstMapper {
                 return this.callSubstring(val);
             case 'values':
                 return this.values(val);
+            case 'time-interval':
+                return this.timeInterval(val);
             case 'default':
                 return this.default(val);
             default:
@@ -1252,6 +1255,10 @@ export class AstDefaultMapper implements IAstMapper {
             left,
             right,
         });
+    }
+
+    timeInterval(val: a.ExprInterval): a.Expr | nil {
+        return val;
     }
 
     sample(s: a.Sample): a.Sample | nil {

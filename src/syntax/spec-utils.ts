@@ -323,7 +323,7 @@ export const starCol: SelectedColumn = { expr: star };
 export function col(name: string, alias?: string): SelectedColumn {
     return {
         expr: ref(name),
-        alias: alias ? { name: alias } : undefined,
+        ...alias ? { alias: { name: alias } } : {},
     };
 }
 export function ref(name: string): Expr {
@@ -331,6 +331,15 @@ export function ref(name: string): Expr {
 }
 export function binary(left: Expr, op: BinaryOperator, right: Expr): ExprBinary {
     return { type: 'binary', left, op, right };
+}
+export function timeInterval(period: number, unit: string, alias?: string): SelectedColumn {
+    return {
+        expr: {
+            type: "time-interval",
+            period, unit,
+        },
+        ...alias ? { alias: {name: alias} } : {},
+    };
 }
 export function name(name: string): Name {
     return { name };

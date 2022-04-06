@@ -703,7 +703,8 @@ export type Expr = ExprRef
     | ExprConstant
     | ExprTernary
     | ExprOverlay
-    | ExprSubstring;
+    | ExprSubstring
+    | ExprInterval;
 
 
 /**
@@ -1059,4 +1060,10 @@ export interface SampleDetails {
 export interface SampleSize {
     size: number;
     postfix?: string;
+}
+
+export interface ExprInterval {
+    type: 'time-interval',
+    period: number;
+    unit: string;
 }

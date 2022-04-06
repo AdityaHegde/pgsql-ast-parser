@@ -229,6 +229,14 @@ expr_primary
     | value_keyword {% x => track(x, {type: 'keyword', keyword: toStr(x) }) %}
     | %qparam {% x => track(x, { type: 'parameter', name: toStr(x[0]) }) %}
     | %kw_default  {% x => track(x, { type: 'default'}) %}
+    | expr_interval
+
+expr_interval -> kw_interval int interval_unit {% x => track(x, {
+    type: 'time-interval',
+    period: unwrap(x[1]),
+    unit: unwrap(x[2]),
+}) %}
+interval_unit -> kw_years | kw_months | kw_days | kw_hours | kw_minutes | kw_seconds | kw_milliseconds
 
 
 # LIKE-kind operators

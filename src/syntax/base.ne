@@ -116,6 +116,13 @@ collist -> ident (comma ident {% last %}):* {% ([head, tail]) => {
      }
      return rej;
  }
+ const notReservedKwMatch = (matchRegex: RegExp) => (x: any[], _: any, rej: any) => {
+     const val = asStr(x[0]);
+     if (matchRegex.test(val)) {
+         return box(x, val);
+     }
+     return rej;
+ }
  const kw = notReservedKw;
  const anyKw = (...kw: string[]) => {
      const kwSet = new Set(kw);
@@ -233,6 +240,14 @@ kw_reservoir -> %word {% notReservedKw('reservoir')  %}
 kw_bernoulli -> %word {% notReservedKw('bernoulli')  %}
 kw_repeatable -> %word {% notReservedKw('repeatable')  %}
 kw_percent -> %word {% notReservedKw('percent')  %}
+# dates
+kw_years -> %word {% notReservedKwMatch(/(?:y|yrs?|years?)\b/) %}
+kw_months -> %word {% notReservedKwMatch(/(?:mon(?:th)?s?)\b/) %}
+kw_days -> %word {% notReservedKwMatch(/(?:d|days?)\b/) %}
+kw_hours -> %word {% notReservedKwMatch(/(?:h|hrs?|hours?)\b/) %}
+kw_minutes -> %word {% notReservedKwMatch(/(?:m|mins?|minutes?)\b/) %}
+kw_seconds -> %word {% notReservedKwMatch(/(?:h|hrs?|hours?)\b/) %}
+kw_milliseconds -> %word {% notReservedKwMatch(/(?:ms|milliseconds?)\b/) %}
 
 
 # === Composite keywords

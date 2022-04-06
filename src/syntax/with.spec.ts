@@ -4,7 +4,6 @@ import { checkStatement, checkInvalidExpr, tbl, name, int, binary, ref } from '.
 import { expect } from 'chai';
 import { SelectedColumn } from './ast';
 
-
 describe('With clause', () => {
 
     checkStatement([`WITH sel AS (select v from data) SELECT v from sel`], {
